@@ -3,35 +3,32 @@ package com.example.labyrinth;
 import android.graphics.Point;
 import android.util.Size;
 
+import java.util.function.Consumer;
+
 public class GameLogic {
-    private DrawView view;
     Types type;
     Point heroPoint=new Point();
     Labyrinth labyrinth;
     LabyrinthGenerator l;
+    private Consumer<Point> heroPositionChangeListener = (point -> {});
 
-    public GameLogic(Size size, Types type, DrawView view) {
-        l = new LabyrinthGenerator(size.getWidth(), size.getHeight());
+    public GameLogic(Size size, Types type) {
+        this(size, type, System.currentTimeMillis());
+    }
+
+    public GameLogic(Size size, Types type, long seed){
+        l = new LabyrinthGenerator(size.getWidth(), size.getHeight(), seed);
         this.type = type;
-        this.view = view;
         restart();
     }
 
-    public GameLogic(int width, int height, Types type, long seed){
-        l=new LabyrinthGenerator(width,height, seed);
-        this.type=type;
-        restart(seed);
+    public void setOnHeroPositionChangeListener(Consumer<Point> heroPositionChangeListener){
+        this.heroPositionChangeListener = heroPositionChangeListener;
     }
 
     public void restart(){
         heroPoint.set(1,1);
         l.generate();
-        this.labyrinth=l.getLabyrinth();
-    }
-
-    public void restart(long seed){
-        heroPoint.set(1,1);
-        l.generate(seed);
         this.labyrinth=l.getLabyrinth();
     }
 
@@ -71,8 +68,7 @@ public class GameLogic {
     }
 
     private void updateView() {
-        view.setHero(heroPoint);
-        view.invalidate();
+        heroPositionChangeListener.accept(heroPoint);
     }
 
     public boolean checkWin(){

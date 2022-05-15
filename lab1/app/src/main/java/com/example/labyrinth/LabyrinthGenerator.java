@@ -37,16 +37,12 @@ public class LabyrinthGenerator {
     private int xLength, yLength;
     private int xExit, yExit;
     private Random random;
-    LabyrinthGenerator(int xLength, int yLength){
-        this.xLength = xLength;
-        this.yLength = yLength;
-        this.generate(System.currentTimeMillis());
-    }
 
     LabyrinthGenerator(int xLength, int yLength,  long seed){
         this.xLength = xLength;
         this.yLength = yLength;
-        this.generate(seed);
+        random = new Random(seed);
+        this.generate();
     }
 
     public Labyrinth getLabyrinth() { return new Labyrinth(matrix,new Point(xExit,yExit) );}
@@ -56,13 +52,8 @@ public class LabyrinthGenerator {
         return new Point(xExit,yExit);
     }
 
-    public void generate(){
-        this.generate(System.currentTimeMillis());
-    }
-
-    public void generate(long seed) {
+    public void generate() {
         matrix = new int[yLength][xLength];
-        random = new Random(seed);
         generateWalls();
         generatePasses();
         generateExit();

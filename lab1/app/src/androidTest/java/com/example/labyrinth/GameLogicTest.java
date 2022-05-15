@@ -1,6 +1,7 @@
 package com.example.labyrinth;
 
 import android.graphics.Point;
+import android.util.Size;
 
 import org.junit.Test;
 
@@ -13,7 +14,7 @@ import static org.junit.Assert.assertTrue;
 public class GameLogicTest {
 
     private int x=5,y=5;
-    private GameLogic g1=new GameLogic(x,y, Types.Classic, 1000);
+    private GameLogic g1=new GameLogic(new Size(x, y), Types.Classic, 1000);
 
     @Test
     public void getHeroPoint(){

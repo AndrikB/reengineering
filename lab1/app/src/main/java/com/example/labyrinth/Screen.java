@@ -32,7 +32,11 @@ public class Screen extends Activity {
         view = new DrawView(this, displaySize, size, type);
         setContentView(view);
 
-        game = new GameLogic(size, type, view);
+        game = new GameLogic(size, type);
+        game.setOnHeroPositionChangeListener(point -> {
+            view.setHero(point);
+            view.invalidate();
+        });
         startNewGame();
 
         SwipeGestureDetector gestureListener = new SwipeGestureDetector(this);
