@@ -15,7 +15,7 @@ enum Direction {
     RIGHT(point -> point.x++),
     DOWN(point -> point.y++);
 
-    private Consumer<Point> direction;
+    private final Consumer<Point> direction;
 
     Direction(Consumer<Point> direction) {
         this.direction = direction;
@@ -27,16 +27,34 @@ enum Direction {
 
 }
 
+enum Cell{
+    CAN_MOVE_TO(true),
+    WALL(true),
+    NOT_VISITED_YET(false),
+    NOT_PERMANENT_WALL(false);
+
+    private final boolean isPermanent;
+
+    Cell(boolean isPermanent) {
+        this.isPermanent = isPermanent;
+    }
+
+    public boolean isPermanent(){
+        return isPermanent;
+    }
+}
+
 public class LabyrinthGenerator {
 
     //  0 - Can move to
     //  1 - Wall
     // -1 - Not visited yet
     // -2 - Wall, but not permanent
-    private int[][] matrix = null;
-    private int xLength, yLength;
+    private Cell[][] matrix = null;
+    private final int xLength;
+    private final int yLength;
     private int xExit, yExit;
-    private Random random;
+    private final Random random;
 
     LabyrinthGenerator(int xLength, int yLength,  long seed){
         this.xLength = xLength;
@@ -53,19 +71,20 @@ public class LabyrinthGenerator {
     }
 
     public void generate() {
-        matrix = new int[yLength][xLength];
+        matrix = new Cell[yLength][xLength];
         generateWalls();
         generatePasses();
         generateExit();
     }
 
     private void generateExit() {
-        int[][] subMatrix = new int[yLength][xLength];
+        Integer[][] subMatrix = new Integer[yLength][xLength];
         for (int i = 0; i < yLength; i++)
             for (int j = 0; j < xLength; j++)
-                subMatrix[i][j] = matrix[i][j];
+                subMatrix[i][j] = matrix[i][j].equals(Cell.WALL) ? 1 : 0;
         subMatrix[0][0] = subMatrix[1][0] = subMatrix[0][1] = 1;
-        dfsPass(1, 1, subMatrix);
+        matrix[0][0] = matrix[1][0] = matrix[0][1] = Cell.WALL;
+        dfsPass(subMatrix);
 
         int maximumValue = subMatrix[1][1];
         for (int i = 1; i < yLength - 1; i++) {
@@ -94,11 +113,10 @@ public class LabyrinthGenerator {
             }
         }
 
-        matrix[yExit][xExit] = 0;
-
+        matrix[yExit][xExit] = Cell.CAN_MOVE_TO;
     }
 
-    private void dfsPass(int x, int y, int[][] subMatrix) {
+    private void dfsPass(Integer[][] subMatrix) {
         Queue<Triple> queue = new LinkedList<>();
         queue.add(new Triple(1, 1, 100));
 
@@ -119,7 +137,7 @@ public class LabyrinthGenerator {
         }
     }
 
-    private List<Direction> getPassesTemplate(int x, int y, int equals, int[][] matrix) {
+    private <T> List<Direction> getPassesTemplate(int x, int y, T equals, T[][] matrix) {
         List<Direction> res = new ArrayList<>();
         if (matrix[y - 1][x] == equals)
             res.add(Direction.DOWN);
@@ -134,37 +152,34 @@ public class LabyrinthGenerator {
 
 
     private List<Direction> getPossiblePasses(int x, int y) {
-        return getPassesTemplate(x, y, -1, this.matrix);
+        return getPassesTemplate(x, y, Cell.NOT_VISITED_YET, this.matrix);
     }
 
     private List<Direction> getTemporaryWalls(int x, int y) {
-        return getPassesTemplate(x, y, -2, this.matrix);
+        return getPassesTemplate(x, y, Cell.NOT_PERMANENT_WALL, this.matrix);
     }
 
-    private List<Direction> getReadyPasses(int x, int y, int[][] subMatrix) {
+    private List<Direction> getReadyPasses(int x, int y, Integer[][] subMatrix) {
         return getPassesTemplate(x, y, 0, subMatrix);
     }
 
     private void placeTemporaryWalls(int x, int y) {
-        if (matrix[y - 1][x] < 0) {
-            matrix[y - 1][x] = -2;
-        }
-        if (matrix[y + 1][x] < 0) {
-            matrix[y + 1][x] = -2;
+        placeTemporaryWall(x, y-1);
+        placeTemporaryWall(x, y+1);
+        placeTemporaryWall(x - 1, y);
+        placeTemporaryWall(x + 1, y);
     }
-        if (matrix[y][x - 1] < 0) {
-            matrix[y][x - 1] = -2;
-}
-        if (matrix[y][x + 1] < 0) {
-            matrix[y][x + 1] = -2;
-        }
+
+    private void placeTemporaryWall(int x, int y){
+        if (!matrix[y][x].isPermanent())
+            matrix[y][x] = Cell.NOT_PERMANENT_WALL;
     }
 
     private void replaceWalls() {
         for (int i = 1; i < yLength - 1; i++)
             for (int j = 1; j < xLength - 1; j++)
-                if (matrix[i][j] == -2)
-                    matrix[i][j] = 1;
+                if (matrix[i][j] == Cell.NOT_PERMANENT_WALL)
+                    matrix[i][j] = Cell.WALL;
     }
 
     private List<Integer> getRandomPass(List<Direction> passes, int x, int y) {
@@ -194,7 +209,7 @@ public class LabyrinthGenerator {
     }
 
     private void passCell(int x, int y) {
-        matrix[y][x] = 0;
+        matrix[y][x] = Cell.CAN_MOVE_TO;
         List<Direction> possiblePasses = getPossiblePasses(x, y);
         if (possiblePasses.size() > 0) {
             List<Integer> randomPass = getRandomPass(possiblePasses, x, y);
@@ -214,7 +229,7 @@ public class LabyrinthGenerator {
                 List<Integer> randomWallPass =
                         getRandomPass(possiblePassesWall, randomWall.get(0), randomWall.get(1));
                 placeTemporaryWalls(randomWall.get(0), randomWall.get(1));
-                matrix[randomWall.get(1)][randomWall.get(0)] = 0;
+                matrix[randomWall.get(1)][randomWall.get(0)] = Cell.CAN_MOVE_TO;
                 passCell(randomWallPass.get(0), randomWallPass.get(1));
             }
         }
@@ -228,16 +243,16 @@ public class LabyrinthGenerator {
 
     private void generateWalls() {
         for (int i = 0; i < yLength; i++)
-            matrix[i][0] = matrix[i][xLength - 1] = 1;
+            matrix[i][0] = matrix[i][xLength - 1] = Cell.WALL;
         for (int i = 0; i < xLength; i++)
-            matrix[0][i] = matrix[yLength - 1][i] = 1;
+            matrix[0][i] = matrix[yLength - 1][i] = Cell.WALL;
 
         // Fill labyrinth with unvisited tag
         for (int i = 1; i < yLength - 1; i++)
             for (int j = 1; j < xLength - 1; j++)
-                matrix[i][j] = -1;
+                matrix[i][j] = Cell.NOT_VISITED_YET;
 
         // Let character to updatePoint into labyrinth
-        matrix[0][1] = matrix[1][0] = matrix[0][0] = 0;
+        matrix[0][1] = matrix[1][0] = matrix[0][0] = Cell.CAN_MOVE_TO;
     }
 }

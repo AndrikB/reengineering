@@ -59,7 +59,7 @@ public class DrawView extends View {
     }
 
     private void drawRect(int i, int j, Canvas canvas){
-        if (labyrinth.elementAt(new Point(j,i))==1)
+        if (labyrinth.elementAt(new Point(j,i))==Cell.WALL)
             canvas.drawRect(j*cellWidth,i*cellHeight,(j+1)*cellWidth,(i+1)*cellHeight, paintField);
         else
             canvas.drawRect(j*cellWidth,i*cellHeight,(j+1)*cellWidth,(i+1)*cellHeight, paintLight);

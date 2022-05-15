@@ -34,10 +34,10 @@ public class GameLogic {
 
     public final boolean couldTurnMove(){
         int countFreeCells=0;
-        if (labyrinth.elementAt(new Point(heroPoint.x,heroPoint.y+1))==0){countFreeCells++;}
-        if (labyrinth.elementAt(new Point(heroPoint.x,heroPoint.y-1))==0){countFreeCells++;}
-        if (labyrinth.elementAt(new Point(heroPoint.x+1,heroPoint.y))==0){countFreeCells++;}
-        if (labyrinth.elementAt(new Point(heroPoint.x-1,heroPoint.y))==0){countFreeCells++;}
+        if (labyrinth.elementAt(new Point(heroPoint.x,heroPoint.y+1))==Cell.CAN_MOVE_TO){countFreeCells++;}
+        if (labyrinth.elementAt(new Point(heroPoint.x,heroPoint.y-1))==Cell.CAN_MOVE_TO){countFreeCells++;}
+        if (labyrinth.elementAt(new Point(heroPoint.x+1,heroPoint.y))==Cell.CAN_MOVE_TO){countFreeCells++;}
+        if (labyrinth.elementAt(new Point(heroPoint.x-1,heroPoint.y))==Cell.CAN_MOVE_TO){countFreeCells++;}
         return (countFreeCells<3 && type== Types.Classic);
     }
 
@@ -54,7 +54,7 @@ public class GameLogic {
 
         do {
             direction.updatePoint(nextItem);
-            if (labyrinth.elementAt(nextItem) == 0) {
+            if (labyrinth.elementAt(nextItem) == Cell.CAN_MOVE_TO) {
                 moveHeroToNewPoint(nextItem);
             } else {
                 return;

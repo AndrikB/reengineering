@@ -3,14 +3,14 @@ package com.example.labyrinth;
 import android.graphics.Point;
 
 public class Labyrinth {
-    private int[][]matrix;
+    private Cell[][]matrix;
     private Point exitPoint;
-    public Labyrinth(int[][] matrix, Point exitPoint){
+    public Labyrinth(Cell[][] matrix, Point exitPoint){
         this.matrix=matrix;
         this.exitPoint=exitPoint;
     }
 
-    public int elementAt(Point p){
+    public Cell elementAt(Point p){
         return matrix[p.y][p.x];
     }
 
