@@ -21,8 +21,9 @@ enum Direction {
         this.direction = direction;
     }
 
-    public void updatePoint(Point point) {
+    public Point updatePoint(Point point) {
         direction.accept(point);
+        return point;
     }
 
 }
@@ -56,7 +57,12 @@ public class LabyrinthGenerator {
     private int xExit, yExit;
     private final Random random;
 
-    LabyrinthGenerator(int xLength, int yLength,  long seed){
+    public static Labyrinth generate(int xLength, int yLength,  long seed){
+        return new LabyrinthGenerator(xLength, yLength, seed).getLabyrinth();
+    }
+
+
+    private LabyrinthGenerator(int xLength, int yLength,  long seed){
         this.xLength = xLength;
         this.yLength = yLength;
         random = new Random(seed);
