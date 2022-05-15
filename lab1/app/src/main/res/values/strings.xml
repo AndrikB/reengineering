@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">labyrinth</string>
+    <string name="btnClick">Start Game</string>
+</resources>
