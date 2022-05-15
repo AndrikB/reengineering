@@ -46,11 +46,6 @@ enum Cell{
 }
 
 public class LabyrinthGenerator {
-
-    //  0 - Can move to
-    //  1 - Wall
-    // -1 - Not visited yet
-    // -2 - Wall, but not permanent
     private Cell[][] matrix = null;
     private final int xLength;
     private final int yLength;
@@ -260,5 +255,16 @@ public class LabyrinthGenerator {
 
         // Let character to updatePoint into labyrinth
         matrix[0][1] = matrix[1][0] = matrix[0][0] = Cell.CAN_MOVE_TO;
+    }
+}
+
+class Triple {
+    public int a;
+    public int b;
+    public int c;
+    Triple(int a, int b, int c) {
+        this.a = a;
+        this.b = b;
+        this.c = c;
     }
 }
