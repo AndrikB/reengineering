@@ -5,18 +5,15 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
 import android.view.WindowManager;
 
 import androidx.annotation.RequiresApi;
 
-public class MainActivity extends Activity
-        implements View.OnClickListener {
-    public static String EXTRA_MESSAGE="com.example.labyrinth.MESSAGE";
+public class MainActivity extends Activity {
+    public static String EXTRA_MESSAGE = "Game type";
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,35 +22,17 @@ public class MainActivity extends Activity
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        View v = findViewById(R.id.buttonClickEasy);
-        v.setOnClickListener(this);
-        View vh = findViewById(R.id.buttonClickHard);
-        vh.setOnClickListener(this);
+        findViewById(R.id.buttonClickEasy)
+                .setOnClickListener((view) -> startNewGame(Types.Classic));
+
+        findViewById(R.id.buttonClickHard)
+                .setOnClickListener((view) -> startNewGame(Types.Hard));
     }
 
-    @Override
-    public void onClick(View view) {
+    private void startNewGame(Types type) {
+        Intent intent = new Intent(this, Screen.class);
+        intent.putExtra(EXTRA_MESSAGE, type);
 
-        Types type= Types.Classic;
-        if(view.getId() == R.id.buttonClickEasy){
-            type= Types.Classic;
-        }
-
-        if(view.getId() == R.id.buttonClickHard){
-            type= Types.Hard;
-        }
-
-        if (view.getId() == R.id.buttonClickEasy||
-                view.getId() == R.id.buttonClickHard)
-        {
-            //define a new Intent for the second Activity
-            Intent intent = new Intent(this, Screen.class);
-            Bundle bundle = new Bundle();
-            bundle.putSerializable(EXTRA_MESSAGE, type);
-            intent.putExtras(bundle);
-
-            //start the second Activity
-            this.startActivity(intent);
-        }
+        this.startActivity(intent);
     }
 }
