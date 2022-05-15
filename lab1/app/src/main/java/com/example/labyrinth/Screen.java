@@ -1,31 +1,21 @@
 package com.example.labyrinth;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
-
 import android.util.Size;
 import android.view.Display;
 import android.view.MotionEvent;
-import android.view.View;
 import android.view.WindowManager;
 
 import androidx.core.view.GestureDetectorCompat;
 
-public class Screen extends Activity
-        implements View.OnClickListener{
+public class Screen extends Activity {
 
-
-    Point displaySize=new Point();
-
-    private final int squareSize=30;
-    private int width;
-    private int height;
+    Point displaySize = new Point();
 
     private DrawView view;
     private GameLogic game;
-    private Types type=Types.Classic;
 
     private GestureDetectorCompat gestureDetectorCompat;
 
@@ -33,45 +23,48 @@ public class Screen extends Activity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        Intent intent = this.getIntent();
-        Bundle bundle = intent.getExtras();
-        this.type=(Types)bundle.getSerializable(MainActivity.EXTRA_MESSAGE);
+        Types type = (Types) getIntent().getSerializableExtra(MainActivity.EXTRA_MESSAGE);
 
+        Size size = getFieldSize();
+        game = new GameLogic(size, type);
+
+        view = new DrawView(this, displaySize, size, type);
+        setContentView(view);
+        startNewGame();
+
+        SwipeGestureDetector gestureListener = new SwipeGestureDetector(this);
+        gestureDetectorCompat = new GestureDetectorCompat(this, gestureListener);
+    }
+
+    private Size getFieldSize() {
         Display display = getWindowManager().getDefaultDisplay();
         display.getSize(displaySize);
-        width=displaySize.x/squareSize; height=displaySize.y/squareSize;
-        game=new GameLogic(width,height, type);
-
-        view=new DrawView(this, displaySize, new Size(width,height));
-        setContentView(view);
-        view.setGameType(type);
-        startNewGame();
-        SwipeGestureDetector gestureListener =new SwipeGestureDetector(this);
-        gestureDetectorCompat=new GestureDetectorCompat(this, gestureListener);
-
+        int squareSize = 30;
+        int width = displaySize.x / squareSize;
+        int height = displaySize.y / squareSize;
+        return new Size(width, height);
     }
 
 
-    public void Move(Move move){
+    public void move(Move move) {
         Point lastHeroPoint;
         do {
-            lastHeroPoint=game.getHeroPoint();
-            if (game.move(move)){
+            lastHeroPoint = game.getHeroPoint();
+            if (game.move(move)) {
                 openDialog();
             }
             view.setHero(game.getHeroPoint());
             view.invalidate();
-        }while (lastHeroPoint!=game.heroPoint&&game.couldNextMove());
+        } while (lastHeroPoint != game.heroPoint && game.couldNextMove());
 
         view.setHero(game.getHeroPoint());
         view.invalidate();
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event){
+    public boolean onTouchEvent(MotionEvent event) {
         gestureDetectorCompat.onTouchEvent(event);
         return true;
     }
@@ -90,9 +83,4 @@ public class Screen extends Activity
     public void openDialog() {
         AlertDialogWindow.showDialogWindow(this);
     }
-
-    @Override
-    public void onClick(View view) { }
-
-
 }

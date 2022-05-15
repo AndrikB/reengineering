@@ -20,7 +20,7 @@ public class DrawViewTest {
     @Test
     public void onCreate() throws NoSuchFieldException, IllegalAccessException {
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        DrawView drawView = new DrawView(appContext,screenSize,countCell);
+        DrawView drawView = new DrawView(appContext,screenSize,countCell, Types.Classic);
         Field paintField = drawView.getClass().
                 getDeclaredField("paintField");
         paintField.setAccessible(true);

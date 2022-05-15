@@ -1,14 +1,15 @@
 package com.example.labyrinth;
 
 import android.graphics.Point;
+import android.util.Size;
 
 public class GameLogic {
     Types type;
     Point heroPoint=new Point();
     Labyrinth labyrinth;
     LabyrinthGenerator l;
-    public GameLogic(int width, int height, Types type){
-        l=new LabyrinthGenerator(width,height);
+    public GameLogic(Size size, Types type){
+        l=new LabyrinthGenerator(size.getWidth(), size.getHeight());
         this.type=type;
         restart();
     }

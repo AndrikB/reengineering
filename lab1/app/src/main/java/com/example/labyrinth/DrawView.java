@@ -17,7 +17,7 @@ enum Types{
 
 public class DrawView extends View {
 
-    private Types type=Types.Classic;
+    private Types type;
     private Point heroPoint;
     private Size countCell;
     private float cellWidth, cellHeight;
@@ -28,13 +28,14 @@ public class DrawView extends View {
 
 
 
-    public DrawView(Context context, Point screenSize, Size countCell) {
+    public DrawView(Context context, Point screenSize, Size countCell, Types type) {
         super(context);
         paintField.setColor(Color.GRAY);
         paintHero.setColor(Color.RED);
         paintLight.setColor(Color.YELLOW);
         this.setBackgroundColor(Color.BLACK);
         this.countCell=countCell;
+        this.type = type;
         cellWidth=((float)screenSize.x)/countCell.getWidth();
         cellHeight=((float)screenSize.y)/countCell.getHeight();
     }

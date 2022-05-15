@@ -28,12 +28,12 @@ public class SwipeGestureDetector extends GestureDetector.SimpleOnGestureListene
                 return false;
 
             if (deltaXAbs>deltaYAbs){
-                if (deltaX>0) activity.Move(Move.RIGHT);
-                else activity.Move(Move.LEFT);
+                if (deltaX>0) activity.move(Move.RIGHT);
+                else activity.move(Move.LEFT);
             }
             else{
-                if (deltaY>0) activity.Move(Move.DOWN);
-                else activity.Move(Move.UP);
+                if (deltaY>0) activity.move(Move.DOWN);
+                else activity.move(Move.UP);
             }
 
         } catch (Exception e) { }
