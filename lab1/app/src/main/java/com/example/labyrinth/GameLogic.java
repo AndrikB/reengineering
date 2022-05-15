@@ -33,14 +33,14 @@ public class GameLogic {
         this.labyrinth = LabyrinthGenerator.generate(size.getWidth(), size.getHeight(), seed);
     }
 
-    public final boolean couldTurnMove(){
+    public final boolean couldTurnMove() {
         if (type == Type.Hard) return false;
-        int countFreeCells=0;
+        int countFreeCells = 0;
         for (Direction direction : Direction.values()) {
             if (labyrinth.elementAt(direction.updatePoint(new Point(heroPoint))) == Cell.CAN_MOVE_TO)
                 countFreeCells++;
         }
-        return (countFreeCells<3);
+        return (countFreeCells < 3);
     }
 
     public Labyrinth getLabyrinth() {

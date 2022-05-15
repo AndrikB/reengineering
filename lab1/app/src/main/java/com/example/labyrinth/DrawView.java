@@ -64,8 +64,8 @@ public class DrawView extends View {
         }
 
         canvas.drawCircle((heroPoint.x + 0.5f) * cellWidth, (heroPoint.y + 0.5f) * cellHeight,
-                    min(cellWidth, cellHeight) / 2,
-                    paintHero);
+                min(cellWidth, cellHeight) / 2,
+                paintHero);
     }
 
     private void drawRect(int i, int j, Canvas canvas) {

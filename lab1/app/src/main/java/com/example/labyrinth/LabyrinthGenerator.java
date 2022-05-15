@@ -28,7 +28,7 @@ enum Direction {
 
 }
 
-enum Cell{
+enum Cell {
     CAN_MOVE_TO(true),
     WALL(true),
     NOT_VISITED_YET(false),
@@ -40,7 +40,7 @@ enum Cell{
         this.isPermanent = isPermanent;
     }
 
-    public boolean isPermanent(){
+    public boolean isPermanent() {
         return isPermanent;
     }
 }
@@ -52,23 +52,25 @@ public class LabyrinthGenerator {
     private int xExit, yExit;
     private final Random random;
 
-    public static Labyrinth generate(int xLength, int yLength,  long seed){
+    public static Labyrinth generate(int xLength, int yLength, long seed) {
         return new LabyrinthGenerator(xLength, yLength, seed).getLabyrinth();
     }
 
 
-    private LabyrinthGenerator(int xLength, int yLength,  long seed){
+    private LabyrinthGenerator(int xLength, int yLength, long seed) {
         this.xLength = xLength;
         this.yLength = yLength;
         random = new Random(seed);
         this.generate();
     }
 
-    public Labyrinth getLabyrinth() { return new Labyrinth(matrix,new Point(xExit,yExit) );}
+    public Labyrinth getLabyrinth() {
+        return new Labyrinth(matrix, new Point(xExit, yExit));
+    }
 
 
-    public Point getExitPoint(){
-        return new Point(xExit,yExit);
+    public Point getExitPoint() {
+        return new Point(xExit, yExit);
     }
 
     public void generate() {
@@ -165,13 +167,13 @@ public class LabyrinthGenerator {
     }
 
     private void placeTemporaryWalls(int x, int y) {
-        placeTemporaryWall(x, y-1);
-        placeTemporaryWall(x, y+1);
+        placeTemporaryWall(x, y - 1);
+        placeTemporaryWall(x, y + 1);
         placeTemporaryWall(x - 1, y);
         placeTemporaryWall(x + 1, y);
     }
 
-    private void placeTemporaryWall(int x, int y){
+    private void placeTemporaryWall(int x, int y) {
         if (!matrix[y][x].isPermanent())
             matrix[y][x] = Cell.NOT_PERMANENT_WALL;
     }
@@ -262,6 +264,7 @@ class Triple {
     public int a;
     public int b;
     public int c;
+
     Triple(int a, int b, int c) {
         this.a = a;
         this.b = b;

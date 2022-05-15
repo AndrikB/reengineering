@@ -55,7 +55,7 @@ public class Screen extends Activity {
 
     public void move(Direction direction) {
         game.move(direction);
-        if(game.checkWin()){
+        if (game.checkWin()) {
             showWinMessage();
         }
     }
