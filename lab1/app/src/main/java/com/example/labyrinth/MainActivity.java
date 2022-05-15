@@ -22,13 +22,13 @@ public class MainActivity extends Activity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         findViewById(R.id.buttonClickEasy)
-                .setOnClickListener((view) -> startNewGame(Types.Classic));
+                .setOnClickListener((view) -> startNewGame(Type.Classic));
 
         findViewById(R.id.buttonClickHard)
-                .setOnClickListener((view) -> startNewGame(Types.Hard));
+                .setOnClickListener((view) -> startNewGame(Type.Hard));
     }
 
-    private void startNewGame(Types type) {
+    private void startNewGame(Type type) {
         Intent intent = new Intent(this, Screen.class);
         intent.putExtra(EXTRA_MESSAGE, type);
 

@@ -7,17 +7,17 @@ import java.util.function.Consumer;
 
 public class GameLogic {
     private final Size size;
-    private final Types type;
+    private final Type type;
     private final long seed;
     private Point heroPoint = new Point();
     private Labyrinth labyrinth;
     private Consumer<Point> heroPositionChangeListener = (point -> {});
 
-    public GameLogic(Size size, Types type) {
+    public GameLogic(Size size, Type type) {
         this(size, type, System.currentTimeMillis());
     }
 
-    public GameLogic(Size size, Types type, long seed) {
+    public GameLogic(Size size, Type type, long seed) {
         this.size = size;
         this.type = type;
         this.seed = seed;
@@ -34,7 +34,7 @@ public class GameLogic {
     }
 
     public final boolean couldTurnMove(){
-        if (type == Types.Hard) return false;
+        if (type == Type.Hard) return false;
         int countFreeCells=0;
         for (Direction direction : Direction.values()) {
             if (labyrinth.elementAt(direction.updatePoint(new Point(heroPoint))) == Cell.CAN_MOVE_TO)

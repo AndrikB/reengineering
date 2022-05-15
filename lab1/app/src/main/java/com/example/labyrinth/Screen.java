@@ -25,7 +25,7 @@ public class Screen extends Activity {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        Types type = (Types) getIntent().getSerializableExtra(MainActivity.EXTRA_MESSAGE);
+        Type type = (Type) getIntent().getSerializableExtra(MainActivity.EXTRA_MESSAGE);
 
         Size size = getFieldSize();
 
