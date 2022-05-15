@@ -23,20 +23,20 @@ public class GameLogicTest {
     @Test
     public void move(){
         Point heroPoint=g1.getHeroPoint();
-        g1.move(Move.DOWN);     assertEquals(heroPoint, g1.getHeroPoint());     assertFalse(g1.checkWin());
-        g1.move(Move.RIGHT);    assertNotEquals(heroPoint, g1.getHeroPoint());  assertFalse(g1.checkWin());
-        g1.move(Move.LEFT);     assertEquals(heroPoint, g1.getHeroPoint());     assertFalse(g1.checkWin());
+        g1.move(Direction.DOWN);     assertEquals(heroPoint, g1.getHeroPoint());     assertFalse(g1.checkWin());
+        g1.move(Direction.RIGHT);    assertNotEquals(heroPoint, g1.getHeroPoint());  assertFalse(g1.checkWin());
+        g1.move(Direction.LEFT);     assertEquals(heroPoint, g1.getHeroPoint());     assertFalse(g1.checkWin());
 
-        g1.move(Move.LEFT);     assertNotEquals(heroPoint, g1.getHeroPoint());  assertFalse(g1.checkWin());
-        g1.move(Move.UP);       assertNotEquals(heroPoint, g1.getHeroPoint());  assertFalse(g1.checkWin());
-        g1.move(Move.RIGHT);    assertNotEquals(heroPoint, g1.getHeroPoint());  assertFalse(g1.checkWin());
-        g1.move(Move.DOWN);     assertEquals(heroPoint, g1.getHeroPoint());     assertFalse(g1.checkWin());
+        g1.move(Direction.LEFT);     assertNotEquals(heroPoint, g1.getHeroPoint());  assertFalse(g1.checkWin());
+        g1.move(Direction.UP);       assertNotEquals(heroPoint, g1.getHeroPoint());  assertFalse(g1.checkWin());
+        g1.move(Direction.RIGHT);    assertNotEquals(heroPoint, g1.getHeroPoint());  assertFalse(g1.checkWin());
+        g1.move(Direction.DOWN);     assertEquals(heroPoint, g1.getHeroPoint());     assertFalse(g1.checkWin());
 
-        g1.move(Move.RIGHT);    assertFalse(g1.checkWin());
-        g1.move(Move.DOWN);     assertFalse(g1.checkWin());
-        g1.move(Move.DOWN);     assertFalse(g1.checkWin());
-        g1.move(Move.LEFT);     assertFalse(g1.checkWin());
-        g1.move(Move.LEFT);     assertTrue(g1.checkWin());
+        g1.move(Direction.RIGHT);    assertFalse(g1.checkWin());
+        g1.move(Direction.DOWN);     assertFalse(g1.checkWin());
+        g1.move(Direction.DOWN);     assertFalse(g1.checkWin());
+        g1.move(Direction.LEFT);     assertFalse(g1.checkWin());
+        g1.move(Direction.LEFT);     assertTrue(g1.checkWin());
     }
 
 }

@@ -4,13 +4,16 @@ import android.graphics.Point;
 import android.util.Size;
 
 public class GameLogic {
+    private DrawView view;
     Types type;
     Point heroPoint=new Point();
     Labyrinth labyrinth;
     LabyrinthGenerator l;
-    public GameLogic(Size size, Types type){
-        l=new LabyrinthGenerator(size.getWidth(), size.getHeight());
-        this.type=type;
+
+    public GameLogic(Size size, Types type, DrawView view) {
+        l = new LabyrinthGenerator(size.getWidth(), size.getHeight());
+        this.type = type;
+        this.view = view;
         restart();
     }
 
@@ -32,14 +35,13 @@ public class GameLogic {
         this.labyrinth=l.getLabyrinth();
     }
 
-
-    public final boolean couldNextMove(){
+    public final boolean couldTurnMove(){
         int countFreeCells=0;
         if (labyrinth.elementAt(new Point(heroPoint.x,heroPoint.y+1))==0){countFreeCells++;}
         if (labyrinth.elementAt(new Point(heroPoint.x,heroPoint.y-1))==0){countFreeCells++;}
         if (labyrinth.elementAt(new Point(heroPoint.x+1,heroPoint.y))==0){countFreeCells++;}
         if (labyrinth.elementAt(new Point(heroPoint.x-1,heroPoint.y))==0){countFreeCells++;}
-        return (countFreeCells<3&&type== Types.Classic);
+        return (countFreeCells<3 && type== Types.Classic);
     }
 
     public Labyrinth getLabyrinth(){
@@ -50,19 +52,27 @@ public class GameLogic {
         return heroPoint;
     }
 
-    public boolean move(Move move){
-        Point nextItem=new Point(heroPoint);
-        if (move == Move.RIGHT)nextItem.x++;
-        if (move == Move.LEFT)nextItem.x--;
-        if (move == Move.DOWN)nextItem.y++;
-        if (move == Move.UP)nextItem.y--;
-        if (labyrinth.elementAt(nextItem)==0) {
-            heroPoint=nextItem;
-            return  checkWin();
+    public void move(Direction direction) {
+        Point nextItem = new Point(heroPoint);
 
-            //return false;//todo mb change
-        }
-        return false;
+        do {
+            direction.updatePoint(nextItem);
+            if (labyrinth.elementAt(nextItem) == 0) {
+                moveHeroToNewPoint(nextItem);
+            } else {
+                return;
+            }
+        } while (couldTurnMove() && !checkWin());
+    }
+
+    private void moveHeroToNewPoint(Point nextItem) {
+        heroPoint = new Point(nextItem);
+        updateView();
+    }
+
+    private void updateView() {
+        view.setHero(heroPoint);
+        view.invalidate();
     }
 
     public boolean checkWin(){

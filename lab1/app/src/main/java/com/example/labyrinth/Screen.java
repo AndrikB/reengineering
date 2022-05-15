@@ -28,10 +28,11 @@ public class Screen extends Activity {
         Types type = (Types) getIntent().getSerializableExtra(MainActivity.EXTRA_MESSAGE);
 
         Size size = getFieldSize();
-        game = new GameLogic(size, type);
 
         view = new DrawView(this, displaySize, size, type);
         setContentView(view);
+
+        game = new GameLogic(size, type, view);
         startNewGame();
 
         SwipeGestureDetector gestureListener = new SwipeGestureDetector(this);
@@ -48,19 +49,11 @@ public class Screen extends Activity {
     }
 
 
-    public void move(Move move) {
-        Point lastHeroPoint;
-        do {
-            lastHeroPoint = game.getHeroPoint();
-            if (game.move(move)) {
-                openDialog();
-            }
-            view.setHero(game.getHeroPoint());
-            view.invalidate();
-        } while (lastHeroPoint != game.heroPoint && game.couldNextMove());
-
-        view.setHero(game.getHeroPoint());
-        view.invalidate();
+    public void move(Direction direction) {
+        game.move(direction);
+        if(game.checkWin()){
+            showWinMessage();
+        }
     }
 
     @Override
@@ -80,7 +73,7 @@ public class Screen extends Activity {
         finish();
     }
 
-    public void openDialog() {
+    public void showWinMessage() {
         AlertDialogWindow.showDialogWindow(this);
     }
 }
