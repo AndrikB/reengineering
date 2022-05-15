@@ -9,34 +9,32 @@ import static java.lang.StrictMath.max;
 public class SwipeGestureDetector extends GestureDetector.SimpleOnGestureListener {
     private static final int SWIPE_MIN_DISTANCE = 50;
 
-    private Screen activity;
+    private final Screen activity;
 
-    SwipeGestureDetector(Screen activity){
-        this.activity=activity;
+    SwipeGestureDetector(Screen activity) {
+        this.activity = activity;
     }
 
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-        try {
+        float deltaY = e2.getY() - e1.getY();
+        float deltaX = e2.getX() - e1.getX();
 
-            float deltaY = e2.getY() - e1.getY();
-            float deltaX = e2.getX() - e1.getX();
+        float deltaYAbs = Math.abs(deltaY);
+        float deltaXAbs = Math.abs(deltaX);
+        if (max(deltaXAbs, deltaYAbs) < SWIPE_MIN_DISTANCE)
+            return false;
 
-            float deltaYAbs = Math.abs(deltaY);
-            float deltaXAbs = Math.abs(deltaX);
-            if (max(deltaXAbs,deltaYAbs) < SWIPE_MIN_DISTANCE)
-                return false;
+        activity.move(selectDirection(deltaY, deltaX, deltaYAbs, deltaXAbs));
 
-            if (deltaXAbs>deltaYAbs){
-                if (deltaX>0) activity.move(Direction.RIGHT);
-                else activity.move(Direction.LEFT);
-            }
-            else{
-                if (deltaY>0) activity.move(Direction.DOWN);
-                else activity.move(Direction.UP);
-            }
-
-        } catch (Exception e) { }
         return true;
+    }
+
+    private Direction selectDirection(float deltaY, Float deltaX, float deltaYAbs, float deltaXAbs) {
+        if (deltaXAbs > deltaYAbs) {
+            return deltaX > 0 ? Direction.RIGHT : Direction.LEFT;
+        } else {
+            return deltaY > 0 ? Direction.DOWN : Direction.UP;
+        }
     }
 }
