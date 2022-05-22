@@ -1,70 +1,75 @@
 package com.example.labyrinth;
 
 import android.graphics.Point;
+import android.util.Size;
+
+import java.util.function.Consumer;
 
 public class GameLogic {
-    Types type;
-    Point heroPoint=new Point();
-    Labyrinth labyrinth;
-    LabyrinthGenerator l;
-    public GameLogic(int width, int height, Types type){
-        l=new LabyrinthGenerator(width,height);
-        this.type=type;
+    private final Size size;
+    private final Type type;
+    private final long seed;
+    private Point heroPoint = new Point();
+    private Labyrinth labyrinth;
+    private Consumer<Point> heroPositionChangeListener = (point -> {});
+
+    public GameLogic(Size size, Type type) {
+        this(size, type, System.currentTimeMillis());
+    }
+
+    public GameLogic(Size size, Type type, long seed) {
+        this.size = size;
+        this.type = type;
+        this.seed = seed;
         restart();
     }
 
-    public GameLogic(int width, int height, Types type, long seed){
-        l=new LabyrinthGenerator(width,height, seed);
-        this.type=type;
-        restart(seed);
+    public void setOnHeroPositionChangeListener(Consumer<Point> heroPositionChangeListener) {
+        this.heroPositionChangeListener = heroPositionChangeListener;
     }
 
-    public void restart(){
-        heroPoint.set(1,1);
-        l.generate();
-        this.labyrinth=l.getLabyrinth();
+    public void restart() {
+        heroPoint.set(1, 1);
+        this.labyrinth = LabyrinthGenerator.generate(size.getWidth(), size.getHeight(), seed);
     }
 
-    public void restart(long seed){
-        heroPoint.set(1,1);
-        l.generate(seed);
-        this.labyrinth=l.getLabyrinth();
+    public final boolean couldTurnMove() {
+        if (type == Type.Hard) return false;
+        int countFreeCells = 0;
+        for (Direction direction : Direction.values()) {
+            if (labyrinth.elementAt(direction.updatePoint(new Point(heroPoint))) == Cell.CAN_MOVE_TO)
+                countFreeCells++;
+        }
+        return (countFreeCells < 3);
     }
 
-
-    public final boolean couldNextMove(){
-        int countFreeCells=0;
-        if (labyrinth.elementAt(new Point(heroPoint.x,heroPoint.y+1))==0){countFreeCells++;}
-        if (labyrinth.elementAt(new Point(heroPoint.x,heroPoint.y-1))==0){countFreeCells++;}
-        if (labyrinth.elementAt(new Point(heroPoint.x+1,heroPoint.y))==0){countFreeCells++;}
-        if (labyrinth.elementAt(new Point(heroPoint.x-1,heroPoint.y))==0){countFreeCells++;}
-        return (countFreeCells<3&&type== Types.Classic);
-    }
-
-    public Labyrinth getLabyrinth(){
+    public Labyrinth getLabyrinth() {
         return labyrinth;
     }
 
-    public Point getHeroPoint(){
+    public Point getHeroPoint() {
         return heroPoint;
     }
 
-    public boolean move(Move move){
-        Point nextItem=new Point(heroPoint);
-        if (move == Move.RIGHT)nextItem.x++;
-        if (move == Move.LEFT)nextItem.x--;
-        if (move == Move.DOWN)nextItem.y++;
-        if (move == Move.UP)nextItem.y--;
-        if (labyrinth.elementAt(nextItem)==0) {
-            heroPoint=nextItem;
-            return  checkWin();
+    public void move(Direction direction) {
+        Point nextItem = new Point(heroPoint);
+        do {
+            direction.updatePoint(nextItem);
 
-            //return false;//todo mb change
-        }
-        return false;
+            if (labyrinth.elementAt(nextItem) == Cell.CAN_MOVE_TO) {
+                moveHeroToNewPoint(nextItem);
+            } else {
+                return;
+            }
+        } while (couldTurnMove() && !checkWin());
     }
 
-    public boolean checkWin(){
+    private void moveHeroToNewPoint(Point nextItem) {
+        heroPoint = new Point(nextItem);
+        heroPositionChangeListener.accept(heroPoint);
+    }
+
+    public boolean checkWin() {
         return heroPoint.equals(labyrinth.getExitPoint());
     }
 }
