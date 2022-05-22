@@ -3,6 +3,8 @@ package com.example.labyrinth;
 import android.graphics.Point;
 import android.util.Size;
 
+import com.example.labyrinth.view.Type;
+
 import java.util.function.Consumer;
 
 public class GameLogic {

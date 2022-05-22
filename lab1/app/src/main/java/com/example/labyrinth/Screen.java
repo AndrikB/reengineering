@@ -10,6 +10,9 @@ import android.view.WindowManager;
 
 import androidx.core.view.GestureDetectorCompat;
 
+import com.example.labyrinth.view.DrawView;
+import com.example.labyrinth.view.Type;
+
 public class Screen extends Activity {
 
     Point displaySize = new Point();
@@ -29,7 +32,7 @@ public class Screen extends Activity {
 
         Size size = getFieldSize();
 
-        view = new DrawView(this, displaySize, size, type);
+        view = DrawView.of(this, displaySize, size, type);
         setContentView(view);
 
         game = new GameLogic(size, type);
