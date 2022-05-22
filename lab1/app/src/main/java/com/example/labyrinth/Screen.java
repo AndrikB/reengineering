@@ -71,6 +71,7 @@ public class Screen extends Activity {
 
     public void startNewGame() {
         game.restart();
+        view.restart();
         view.setLabyrinth(game.getLabyrinth());
         view.setHero(game.getHeroPoint());
         view.invalidate();

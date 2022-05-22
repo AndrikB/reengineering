@@ -13,7 +13,7 @@ import java.util.function.Consumer;
 
 public abstract class GameLogic {
     private final Size size;
-    private final long seed;
+    private long seed;
     private Point heroPoint = new Point();
     private Labyrinth labyrinth;
     private Consumer<Point> heroPositionChangeListener = (point -> {});
@@ -28,6 +28,7 @@ public abstract class GameLogic {
             case Hard:
                 return new HardGameLogic(size, seed);
             case Classic:
+            case Medium:
                 return new ClassicGameLogic(size, seed);
             default:
                 throw new RuntimeException(type + " not found");
@@ -47,6 +48,7 @@ public abstract class GameLogic {
     public void restart() {
         heroPoint.set(1, 1);
         this.labyrinth = LabyrinthGenerator.generate(size.getWidth(), size.getHeight(), seed);
+        seed = System.currentTimeMillis();
     }
 
     protected final boolean couldTurnMove() {
@@ -79,7 +81,9 @@ public abstract class GameLogic {
         } while (shouldContinueMove());
     }
 
-    protected abstract boolean shouldContinueMove();
+    protected boolean shouldContinueMove(){
+        return !checkWin() && couldTurnMove();
+    }
 
     private void moveHeroToNewPoint(Point nextItem) {
         heroPoint = new Point(nextItem);

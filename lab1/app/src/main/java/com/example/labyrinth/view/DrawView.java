@@ -19,7 +19,7 @@ import com.example.labyrinth.Type;
 @SuppressLint("ViewConstructor")
 public abstract class DrawView extends View {
 
-    private final Size countCell;
+    protected final Size countCell;
 
     private final float cellWidth;
     private final float cellHeight;
@@ -36,6 +36,7 @@ public abstract class DrawView extends View {
         switch (type){
             case Hard: return new HardDrawView(context, screenSize, countCell);
             case Classic: return new ClassicDrawView(context, screenSize, countCell);
+            case Medium: return new MediumDrawView(context, screenSize, countCell);
             default: throw new RuntimeException(type + " not found");
         }
     }
@@ -76,6 +77,8 @@ public abstract class DrawView extends View {
     public void setLabyrinth(Labyrinth labyrinth) {
         this.labyrinth = labyrinth;
     }
+
+    public void restart(){}
 
     public void setHero(Point heroPoint) {
         this.heroPoint = heroPoint;

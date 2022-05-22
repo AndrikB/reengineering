@@ -1,5 +1,7 @@
 package com.example.labyrinth;
 
 public enum Type {
-    Classic, Hard
+    Classic,
+    Medium,
+    Hard
 }
