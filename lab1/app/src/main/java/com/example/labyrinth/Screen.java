@@ -10,6 +10,7 @@ import android.view.WindowManager;
 
 import androidx.core.view.GestureDetectorCompat;
 
+import com.example.labyrinth.game.GameLogic;
 import com.example.labyrinth.view.DrawView;
 import com.example.labyrinth.view.Type;
 
@@ -35,7 +36,7 @@ public class Screen extends Activity {
         view = DrawView.of(this, displaySize, size, type);
         setContentView(view);
 
-        game = new GameLogic(size, type);
+        game = GameLogic.of(size, type);
         game.setOnHeroPositionChangeListener(point -> {
             view.setHero(point);
             view.invalidate();
