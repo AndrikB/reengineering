@@ -1,4 +1,4 @@
-package com.example.labyrinth.view;
+package com.example.labyrinth;
 
 public enum Type {
     Classic, Hard

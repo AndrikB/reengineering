@@ -7,7 +7,7 @@ import com.example.labyrinth.Cell;
 import com.example.labyrinth.Direction;
 import com.example.labyrinth.Labyrinth;
 import com.example.labyrinth.LabyrinthGenerator;
-import com.example.labyrinth.view.Type;
+import com.example.labyrinth.Type;
 
 import java.util.function.Consumer;
 

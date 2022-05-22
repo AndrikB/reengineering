@@ -9,8 +9,6 @@ import android.view.WindowManager;
 
 import androidx.annotation.RequiresApi;
 
-import com.example.labyrinth.view.Type;
-
 public class MainActivity extends Activity {
     public static String EXTRA_MESSAGE = "Game type";
 

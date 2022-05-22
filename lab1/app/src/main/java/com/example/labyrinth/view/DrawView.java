@@ -14,6 +14,7 @@ import static java.lang.Math.min;
 
 import com.example.labyrinth.Cell;
 import com.example.labyrinth.Labyrinth;
+import com.example.labyrinth.Type;
 
 @SuppressLint("ViewConstructor")
 public abstract class DrawView extends View {

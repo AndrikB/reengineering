@@ -12,7 +12,6 @@ import androidx.core.view.GestureDetectorCompat;
 
 import com.example.labyrinth.game.GameLogic;
 import com.example.labyrinth.view.DrawView;
-import com.example.labyrinth.view.Type;
 
 public class Screen extends Activity {
 
