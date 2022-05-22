@@ -7,43 +7,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Random;
-import java.util.function.Consumer;
-
-enum Direction {
-    UP(point -> point.y--),
-    LEFT(point -> point.x--),
-    RIGHT(point -> point.x++),
-    DOWN(point -> point.y++);
-
-    private final Consumer<Point> direction;
-
-    Direction(Consumer<Point> direction) {
-        this.direction = direction;
-    }
-
-    public Point updatePoint(Point point) {
-        direction.accept(point);
-        return point;
-    }
-
-}
-
-enum Cell {
-    CAN_MOVE_TO(true),
-    WALL(true),
-    NOT_VISITED_YET(false),
-    NOT_PERMANENT_WALL(false);
-
-    private final boolean isPermanent;
-
-    Cell(boolean isPermanent) {
-        this.isPermanent = isPermanent;
-    }
-
-    public boolean isPermanent() {
-        return isPermanent;
-    }
-}
 
 public class LabyrinthGenerator {
     private Cell[][] matrix = null;
@@ -258,16 +221,16 @@ public class LabyrinthGenerator {
         // Let character to updatePoint into labyrinth
         matrix[0][1] = matrix[1][0] = matrix[0][0] = Cell.CAN_MOVE_TO;
     }
-}
 
-class Triple {
-    public int a;
-    public int b;
-    public int c;
+    private static class Triple {
+        public int a;
+        public int b;
+        public int c;
 
-    Triple(int a, int b, int c) {
-        this.a = a;
-        this.b = b;
-        this.c = c;
+        Triple(int a, int b, int c) {
+            this.a = a;
+            this.b = b;
+            this.c = c;
+        }
     }
 }

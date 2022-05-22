@@ -24,6 +24,9 @@ public class MainActivity extends Activity {
         findViewById(R.id.buttonClickEasy)
                 .setOnClickListener((view) -> startNewGame(Type.Classic));
 
+        findViewById(R.id.buttonClickMedium)
+                .setOnClickListener((view) -> startNewGame(Type.Medium));
+
         findViewById(R.id.buttonClickHard)
                 .setOnClickListener((view) -> startNewGame(Type.Hard));
     }
